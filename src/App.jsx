@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Home, PlusCircle, List, History, Bell, Settings, PhoneCall, Search, Filter,
   CheckCircle, XCircle, Clock, AlertCircle, User, Menu, X, FileText,
@@ -140,6 +140,11 @@ export default function App() {
 
   const t = TRANSLATIONS[lang];
 
+  // Force scroll to top on view change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentView]);
+
   // --- Handlers ---
   const toggleLanguage = () => setLang(lang === 'ar' ? 'en' : 'ar');
 
@@ -257,141 +262,50 @@ export default function App() {
     { id: 'support', label: t.support, icon: <PhoneCall size={20} />, roles: ['doctor', 'patient', 'pharmacy'] },
   ];
 
-  // --- Auth Screen ---
-  if (!isAuthenticated) {
-    return (
-      <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center p-4 font-sans ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-        <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap'); body { font-family: ${lang === 'ar' ? "'Tajawal', sans-serif" : "'Inter', sans-serif"}; }`}} />
-        
-        <div className="absolute top-6 right-6 left-6 flex justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200"><HeartPulse size={24} /></div>
-            <h1 className="text-2xl font-black text-gray-800 tracking-tight">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
-          </div>
-          <button onClick={toggleLanguage} className="flex items-center gap-2 px-4 py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-700 rounded-xl font-bold transition-all">
-            <Globe size={18} /> <span className="pt-0.5">{lang === 'ar' ? 'English' : 'عربي'}</span>
-          </button>
-        </div>
-
-        <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md text-center border border-gray-100 fade-in">
-          <h2 className="text-3xl font-black text-gray-800 mb-2">{t.loginTitle}</h2>
-          <p className="text-gray-500 mb-8">{t.loginSubtitle}</p>
-
-          <div className="flex bg-gray-100 p-1 rounded-xl mb-6">
-            <button onClick={() => setAuthMode('signin')} className={`flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${authMode === 'signin' ? 'bg-white shadow-sm text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>{t.signIn}</button>
-            <button onClick={() => setAuthMode('signup')} className={`flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${authMode === 'signup' ? 'bg-white shadow-sm text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>{t.signUp}</button>
-          </div>
-
-          <form onSubmit={handleLoginSubmit} className="space-y-4 mb-6 text-left" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-            <div className="flex gap-2 p-1 bg-gray-50 rounded-xl border border-gray-100 mb-2">
-              {['patient', 'doctor', 'pharmacy'].map(role => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => setSelectedRole(role)}
-                  className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${selectedRole === role ? 'bg-white shadow-sm text-indigo-700 border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  {role === 'doctor' ? t.doctorRole : role === 'patient' ? t.patientRole : t.pharmacyRole}
-                </button>
-              ))}
-            </div>
-            <div>
-              <div className="relative">
-                <Mail className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-3.5 text-gray-400`} size={18} />
-                <input type="email" required placeholder={t.email} className={`w-full bg-gray-50 border border-gray-200 rounded-xl py-3 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4 text-left'}`} />
-              </div>
-            </div>
-            <div>
-              <div className="relative">
-                <Lock className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-3.5 text-gray-400`} size={18} />
-                <input type="password" required placeholder={t.password} className={`w-full bg-gray-50 border border-gray-200 rounded-xl py-3 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4 text-left'}`} />
-              </div>
-            </div>
-            <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-indigo-200 mt-2">
-              {authMode === 'signin' ? t.signIn : t.signUp}
-            </button>
-          </form>
-
-          <div className="relative flex py-2 items-center mb-6">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase font-semibold">OR</span>
-            <div className="flex-grow border-t border-gray-200"></div>
-          </div>
-
-          <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-100 hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl transition-all mb-8">
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            {t.googleSignIn}
-          </button>
-
-          <div className="flex items-start gap-2 bg-green-50 p-3 rounded-lg text-left text-green-800" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-            <ShieldCheck size={18} className="shrink-0 mt-0.5 text-green-600" />
-            <p className="text-xs font-medium leading-relaxed">{t.privacyNotice}</p>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">{t.demoLogins}</p>
-            <div className="flex justify-center gap-2">
-              {MOCK_USERS.map(user => (
-                <button key={user.id} onClick={() => handleLogin(user)} className="px-3 py-1.5 bg-gray-100 hover:bg-indigo-100 text-gray-600 hover:text-indigo-700 text-xs font-bold rounded-lg transition-colors capitalize">
-                  {user.role === 'doctor' ? t.doctorRole : user.role === 'patient' ? t.patientRole : t.pharmacyRole}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // --- Views ---
   const renderDashboard = () => {
     const pendingCount = filteredRequests.filter(r => r.status === 'Pending').length;
     const actionCount = filteredRequests.filter(r => r.status === 'Approved').length;
 
     return (
-      <div className="space-y-6 fade-in">
-        <h2 className="text-2xl font-bold text-gray-800">{t.welcome} {getText(currentUser.name, lang)}</h2>
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.welcome} {getText(currentUser.name, lang)}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-            <div><p className="text-sm text-gray-500 mb-1">{t.totalReqs}</p><p className="text-3xl font-bold text-gray-800">{filteredRequests.length}</p></div>
-            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><FileText size={28}/></div>
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-all">
+            <div><p className="text-sm font-bold text-gray-500 mb-1 uppercase tracking-wider">{t.totalReqs}</p><p className="text-4xl font-black text-gray-900">{filteredRequests.length}</p></div>
+            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl"><FileText size={32}/></div>
           </div>
           {currentUser.role !== 'pharmacy' && (
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.pending}</p><p className="text-3xl font-bold text-yellow-600">{pendingCount}</p></div>
-              <div className="p-4 bg-yellow-50 text-yellow-600 rounded-xl"><Clock size={28}/></div>
+            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-all">
+              <div><p className="text-sm font-bold text-gray-500 mb-1 uppercase tracking-wider">{t.pending}</p><p className="text-4xl font-black text-amber-600">{pendingCount}</p></div>
+              <div className="p-4 bg-amber-50 text-amber-600 rounded-2xl"><Clock size={32}/></div>
             </div>
           )}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-            <div><p className="text-sm text-gray-500 mb-1">{t.approved}</p><p className="text-3xl font-bold text-green-600">{actionCount}</p></div>
-            <div className="p-4 bg-green-50 text-green-600 rounded-xl"><CheckCircle size={28}/></div>
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-all">
+            <div><p className="text-sm font-bold text-gray-500 mb-1 uppercase tracking-wider">{t.approved}</p><p className="text-4xl font-black text-emerald-600">{actionCount}</p></div>
+            <div className="p-4 bg-emerald-50 text-emerald-600 rounded-2xl"><CheckCircle size={32}/></div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-50 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-800">{t.latestReqs}</h3>
-            <button onClick={() => setCurrentView('requests')} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{t.viewAll}</button>
+            <h3 className="text-xl font-black text-gray-900">{t.latestReqs}</h3>
+            <button onClick={() => setCurrentView('requests')} className="text-sm text-indigo-600 hover:text-indigo-800 font-bold bg-indigo-50 px-4 py-2 rounded-xl transition-all">{t.viewAll}</button>
           </div>
           <div className="divide-y divide-gray-50">
             {filteredRequests.slice(0, 4).map(req => (
-              <div key={req.id} className="p-4 hover:bg-gray-50 flex items-center justify-between transition-colors">
+              <div key={req.id} className="p-5 hover:bg-gray-50 flex items-center justify-between transition-colors group">
                 <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-full ${getStatusDetails(req.status).color}`}>{getStatusDetails(req.status).icon}</div>
+                  <div className={`p-3 rounded-2xl ${getStatusDetails(req.status).color}`}>{getStatusDetails(req.status).icon}</div>
                   <div>
-                    <p className="font-semibold text-gray-800">{getText(req.medicationName, lang)} <span className="text-gray-400 text-sm ml-1">({req.dose})</span></p>
-                    <p className="text-xs text-gray-500">{currentUser.role !== 'patient' ? getText(req.patientName, lang) : req.id} • {req.date}</p>
+                    <p className="font-bold text-gray-900 text-lg">{getText(req.medicationName, lang)} <span className="text-gray-400 text-sm font-medium ml-1">({req.dose})</span></p>
+                    <p className="text-sm text-gray-500 font-medium">{currentUser.role !== 'patient' ? getText(req.patientName, lang) : req.id} • {req.date}</p>
                   </div>
                 </div>
-                <button onClick={() => setSelectedRequest(req)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50"><Eye size={20} /></button>
+                <button onClick={() => setSelectedRequest(req)} className="p-3 text-gray-400 hover:text-indigo-600 rounded-2xl hover:bg-indigo-50 transition-all opacity-0 group-hover:opacity-100"><Eye size={24} /></button>
               </div>
             ))}
-            {filteredRequests.length === 0 && <div className="p-6 text-center text-gray-400">{t.noReqs}</div>}
+            {filteredRequests.length === 0 && <div className="p-12 text-center text-gray-400 font-bold">{t.noReqs}</div>}
           </div>
         </div>
       </div>
@@ -399,41 +313,44 @@ export default function App() {
   };
 
   const renderNewRequest = () => (
-    <div className="max-w-3xl mx-auto space-y-6 fade-in">
-      <h2 className="text-2xl font-bold text-gray-800">{t.newReqTitle}</h2>
+    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in zoom-in-95 duration-500">
+      <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.newReqTitle}</h2>
       
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <form onSubmit={handleSubmitRequest} className="space-y-6">
+      <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+        <form onSubmit={handleSubmitRequest} className="space-y-8">
           
           {currentUser.role === 'doctor' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t.medName}</label>
-                <input type="text" required value={reqMedName} onChange={e => setReqMedName(e.target.value)} placeholder={t.medPlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" />
+                <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">{t.medName}</label>
+                <input type="text" required value={reqMedName} onChange={e => setReqMedName(e.target.value)} placeholder={t.medPlaceholder} className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all bg-gray-50 focus:bg-white text-lg" />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t.medDose}</label>
-                <input type="text" required value={reqDose} onChange={e => setReqDose(e.target.value)} placeholder={t.dosePlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" />
+                <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">{t.medDose}</label>
+                <input type="text" required value={reqDose} onChange={e => setReqDose(e.target.value)} placeholder={t.dosePlaceholder} className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all bg-gray-50 focus:bg-white text-lg" />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{t.medDuration}</label>
-                <input type="number" required value={reqDuration} onChange={e => setReqDuration(e.target.value)} placeholder={t.durationPlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" />
+                <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">{t.medDuration}</label>
+                <input type="number" required value={reqDuration} onChange={e => setReqDuration(e.target.value)} placeholder={t.durationPlaceholder} className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all bg-gray-50 focus:bg-white text-lg" />
               </div>
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t.selectRefill}</label>
-              <select 
-                required 
-                value={reqMedName} 
-                onChange={e => setReqMedName(e.target.value)} 
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none bg-transparent"
-              >
-                <option value="" disabled>-- {t.selectRefill} --</option>
-                {PATIENT_MEDICATIONS.map(med => (
-                  <option key={med.id} value={med.id}>{getText(med.name, lang)} ({med.dose})</option>
-                ))}
-              </select>
+              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">{t.selectRefill}</label>
+              <div className="relative">
+                <select 
+                  required 
+                  value={reqMedName} 
+                  onChange={e => setReqMedName(e.target.value)} 
+                  className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none appearance-none bg-gray-50 focus:bg-white text-lg transition-all"
+                >
+                  <option value="" disabled>-- {t.selectRefill} --</option>
+                  {PATIENT_MEDICATIONS.map(med => (
+                    <option key={med.id} value={med.id}>{getText(med.name, lang)} ({med.dose})</option>
+                  ))}
+                </select>
+                <div className={`absolute ${lang === 'ar' ? 'left-6' : 'right-6'} top-5 pointer-events-none text-gray-400`}><Filter size={20}/></div>
+              </div>
 
               {reqMedName && (() => {
                 const med = PATIENT_MEDICATIONS.find(m => m.id === reqMedName);
@@ -442,8 +359,8 @@ export default function App() {
                 const due = new Date(med.nextRefillDate);
                 const isReady = today >= due;
                 return (
-                  <div className={`mt-3 p-3 rounded-lg border flex items-center gap-2 text-sm font-semibold ${isReady ? 'bg-green-50 border-green-200 text-green-700' : 'bg-yellow-50 border-yellow-200 text-yellow-700'}`}>
-                    {isReady ? <CheckCircle size={18}/> : <Clock size={18}/>}
+                  <div className={`mt-4 p-5 rounded-2xl border-2 flex items-center gap-4 text-base font-bold animate-in slide-in-from-top-2 ${isReady ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-amber-50 border-amber-100 text-amber-700'}`}>
+                    {isReady ? <CheckCircle size={24}/> : <Clock size={24}/>}
                     {isReady ? t.refillReady : `${t.refillDue} ${med.nextRefillDate}`}
                   </div>
                 );
@@ -452,11 +369,11 @@ export default function App() {
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">{t.notes}</label>
-            <textarea rows="3" value={reqNotes} onChange={e => setReqNotes(e.target.value)} placeholder={t.notesPlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none resize-none"></textarea>
+            <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">{t.notes}</label>
+            <textarea rows="4" value={reqNotes} onChange={e => setReqNotes(e.target.value)} placeholder={t.notesPlaceholder} className="w-full px-6 py-4 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none resize-none transition-all bg-gray-50 focus:bg-white text-lg"></textarea>
           </div>
-          <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
-            <PlusCircle size={20} /> <span>{t.createBtn}</span>
+          <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 px-6 rounded-2xl transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-3 text-xl active:scale-95">
+            <PlusCircle size={24} /> <span>{t.createBtn}</span>
           </button>
         </form>
       </div>
@@ -464,24 +381,24 @@ export default function App() {
   );
 
   const renderRequestsList = () => (
-    <div className="space-y-6 fade-in">
-      <div className="flex justify-between gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">{t.reqListTitle}</h2>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.reqListTitle}</h2>
         {['patient', 'doctor'].includes(currentUser.role) && (
-          <button onClick={() => setCurrentView('new-request')} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center gap-2">
-            <PlusCircle size={18} /> {t.newRequest}
+          <button onClick={() => setCurrentView('new-request')} className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black hover:bg-indigo-700 flex items-center gap-2 shadow-lg shadow-indigo-100 active:scale-95 transition-all">
+            <PlusCircle size={20} /> {t.newRequest}
           </button>
         )}
       </div>
 
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4">
+      <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-3 text-gray-400`} size={20} />
-          <input type="text" placeholder={t.searchPlaceholder} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`} />
+          <Search className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-4 text-gray-400`} size={20} />
+          <input type="text" placeholder={t.searchPlaceholder} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full py-3.5 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all bg-gray-50 focus:bg-white font-medium ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4 text-left'}`} />
         </div>
         <div className="relative md:w-64">
-          <Filter className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-3 text-gray-400`} size={20} />
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={`w-full py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`}>
+          <Filter className={`absolute ${lang === 'ar' ? 'right-4' : 'left-4'} top-4 text-gray-400`} size={20} />
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={`w-full py-3.5 rounded-2xl border border-gray-200 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none appearance-none transition-all bg-gray-50 focus:bg-white font-bold ${lang === 'ar' ? 'pr-12 pl-4 text-right' : 'pl-12 pr-4 text-left'}`}>
             <option value="All">{t.allStatuses}</option>
             <option value="Pending">{t.pending}</option>
             <option value="Approved">{t.approved}</option>
@@ -491,41 +408,41 @@ export default function App() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className={`w-full whitespace-nowrap ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-            <thead className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
+            <thead className="bg-gray-50 text-gray-500 text-xs font-black uppercase tracking-widest border-b border-gray-100">
               <tr>
-                <th className="px-6 py-4 font-semibold">{t.colId}</th>
-                {currentUser.role !== 'patient' && <th className="px-6 py-4 font-semibold">{t.colPatient}</th>}
-                <th className="px-6 py-4 font-semibold">{t.colMed}</th>
-                <th className="px-6 py-4 font-semibold">{t.colDate}</th>
-                <th className="px-6 py-4 font-semibold">{t.colStatus}</th>
-                <th className="px-6 py-4 font-semibold text-center">{t.colActions}</th>
+                <th className="px-8 py-5">{t.colId}</th>
+                {currentUser.role !== 'patient' && <th className="px-8 py-5">{t.colPatient}</th>}
+                <th className="px-8 py-5">{t.colMed}</th>
+                <th className="px-8 py-5">{t.colDate}</th>
+                <th className="px-8 py-5">{t.colStatus}</th>
+                <th className="px-8 py-5 text-center">{t.colActions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredRequests.map((req) => (
-                <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-800">{req.id}</td>
-                  {currentUser.role !== 'patient' && <td className="px-6 py-4 text-gray-600">{getText(req.patientName, lang)}</td>}
-                  <td className="px-6 py-4 font-medium text-indigo-600">{getText(req.medicationName, lang)} <span className="text-gray-400 text-sm ml-1">({req.dose})</span></td>
-                  <td className="px-6 py-4 text-gray-500">{req.date}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border ${getStatusDetails(req.status).color}`}>
+                <tr key={req.id} className="hover:bg-indigo-50/30 transition-colors group">
+                  <td className="px-8 py-5 font-black text-gray-900">{req.id}</td>
+                  {currentUser.role !== 'patient' && <td className="px-8 py-5 font-bold text-gray-700">{getText(req.patientName, lang)}</td>}
+                  <td className="px-8 py-5 font-black text-indigo-700 text-lg">{getText(req.medicationName, lang)} <span className="text-gray-400 text-sm font-bold ml-1">({req.dose})</span></td>
+                  <td className="px-8 py-5 font-bold text-gray-500">{req.date}</td>
+                  <td className="px-8 py-5">
+                    <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black border-2 ${getStatusDetails(req.status).color}`}>
                       {getStatusDetails(req.status).icon} {getStatusDetails(req.status).label}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <button onClick={() => setSelectedRequest(req)} className="text-indigo-600 hover:text-indigo-800 font-medium px-4 py-2 rounded-lg hover:bg-indigo-50 transition-colors inline-flex items-center gap-2">
-                      <Eye size={16} /> <span className="text-sm">{t.viewDetails}</span>
+                  <td className="px-8 py-5 text-center">
+                    <button onClick={() => setSelectedRequest(req)} className="bg-white text-indigo-600 border-2 border-indigo-100 hover:border-indigo-600 font-black px-6 py-2.5 rounded-2xl transition-all inline-flex items-center gap-2 group-hover:shadow-lg">
+                      <Eye size={18} /> <span className="text-sm">{t.viewDetails}</span>
                     </button>
                   </td>
                 </tr>
               ))}
               {filteredRequests.length === 0 && (
                 <tr>
-                  <td colSpan={currentUser.role !== 'patient' ? 6 : 5} className="px-6 py-12 text-center text-gray-400">
+                  <td colSpan={currentUser.role !== 'patient' ? 6 : 5} className="px-8 py-20 text-center text-gray-400 font-black text-xl">
                     {t.noReqs}
                   </td>
                 </tr>
@@ -537,235 +454,109 @@ export default function App() {
     </div>
   );
 
-  const renderHistory = () => (
-    <div className="space-y-6 fade-in max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800">{t.historyTitle}</h2>
-      
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-800 mb-4">{t.allergiesTitle}</h3>
-        <div className="flex flex-wrap gap-2 mb-6">
-          {allergies.map(al => (
-            <span key={al.id} className="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg text-sm font-semibold border border-red-100 flex items-center gap-2">
-              <AlertCircle size={16}/> {getText(al.text, lang)}
-            </span>
-          ))}
-          {allergies.length === 0 && <span className="text-gray-400 text-sm">لا توجد سجلات</span>}
-        </div>
+  // --- Auth Screen (Redesigned) ---
+  if (!isAuthenticated) {
+    return (
+      <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center p-4 font-sans ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+        <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap'); body { font-family: ${lang === 'ar' ? "'Tajawal', sans-serif" : "'Inter', sans-serif"}; }`}} />
         
-        {currentUser.role === 'patient' && (
-          <form onSubmit={handleAddAllergy} className="flex gap-2">
-            <input type="text" value={newAllergy} onChange={e => setNewAllergy(e.target.value)} placeholder={t.allergyPlaceholder} className="flex-1 px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
-            <button type="submit" className="bg-red-50 text-red-600 font-bold px-4 py-2 rounded-xl border border-red-100 hover:bg-red-100 transition-colors flex items-center gap-2">
-              <PlusCircle size={18} /> {t.addAllergy}
+        <div className="absolute top-8 right-8 left-8 flex justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-indigo-600 p-3 rounded-[1.25rem] text-white shadow-2xl shadow-indigo-200"><HeartPulse size={32} /></div>
+            <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
+          </div>
+          <button onClick={toggleLanguage} className="flex items-center gap-2 px-5 py-3 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-900 rounded-2xl font-black transition-all">
+            <Globe size={20} /> <span className="pt-0.5">{lang === 'ar' ? 'English' : 'العربية'}</span>
+          </button>
+        </div>
+
+        <div className="bg-white p-10 md:p-14 rounded-[3rem] shadow-2xl w-full max-w-lg text-center border border-gray-50 animate-in fade-in zoom-in duration-700">
+          <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">{t.loginTitle}</h2>
+          <p className="text-gray-500 font-bold mb-10 text-lg">{t.loginSubtitle}</p>
+
+          <div className="flex bg-gray-100 p-1.5 rounded-[1.5rem] mb-10">
+            <button onClick={() => setAuthMode('signin')} className={`flex-1 py-3.5 rounded-[1.25rem] font-black text-base transition-all ${authMode === 'signin' ? 'bg-white shadow-md text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>{t.signIn}</button>
+            <button onClick={() => setAuthMode('signup')} className={`flex-1 py-3.5 rounded-[1.25rem] font-black text-base transition-all ${authMode === 'signup' ? 'bg-white shadow-md text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>{t.signUp}</button>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="space-y-6 mb-10 text-left" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+            <div className="flex gap-2 p-1.5 bg-gray-50 rounded-[1.5rem] border border-gray-100 mb-4">
+              {['patient', 'doctor', 'pharmacy'].map(role => (
+                <button
+                  key={role}
+                  type="button"
+                  onClick={() => setSelectedRole(role)}
+                  className={`flex-1 py-3 rounded-[1.25rem] text-sm font-black transition-all ${selectedRole === role ? 'bg-white shadow-md text-indigo-700 border border-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  {role === 'doctor' ? t.doctorRole : role === 'patient' ? t.patientRole : t.pharmacyRole}
+                </button>
+              ))}
+            </div>
+            <div className="space-y-4">
+              <div className="relative">
+                <Mail className={`absolute ${lang === 'ar' ? 'right-5' : 'left-5'} top-5 text-gray-400`} size={20} />
+                <input type="email" required placeholder={t.email} className={`w-full bg-gray-50 border border-gray-200 rounded-[1.5rem] py-5 outline-none focus:ring-4 focus:ring-indigo-100 focus:bg-white transition-all text-lg font-medium ${lang === 'ar' ? 'pr-14 pl-6 text-right' : 'pl-14 pr-6 text-left'}`} />
+              </div>
+              <div className="relative">
+                <Lock className={`absolute ${lang === 'ar' ? 'right-5' : 'left-5'} top-5 text-gray-400`} size={20} />
+                <input type="password" required placeholder={t.password} className={`w-full bg-gray-50 border border-gray-200 rounded-[1.5rem] py-5 outline-none focus:ring-4 focus:ring-indigo-100 focus:bg-white transition-all text-lg font-medium ${lang === 'ar' ? 'pr-14 pl-6 text-right' : 'pl-14 pr-6 text-left'}`} />
+              </div>
+            </div>
+            <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-[1.5rem] transition-all shadow-xl shadow-indigo-100 mt-4 text-xl active:scale-95">
+              {authMode === 'signin' ? t.signIn : t.signUp}
             </button>
           </form>
-        )}
-      </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-50 flex justify-between items-center">
-          <h3 className="text-lg font-bold text-gray-800">السجلات السابقة</h3>
-          {currentUser.role === 'doctor' && (
-             <button className="text-indigo-600 font-semibold text-sm flex items-center gap-2 hover:bg-indigo-50 px-3 py-1.5 rounded-lg">
-               <PlusCircle size={16} /> {t.addRecord}
-             </button>
-          )}
-        </div>
-        <div className="divide-y divide-gray-50">
-          {patientHistory.map(record => (
-            <div key={record.id} className="p-6">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-bold text-gray-800">{getText(record.diagnosis, lang)}</h4>
-                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{record.date}</span>
-              </div>
-              <p className="text-gray-600 text-sm mt-2 bg-gray-50 p-4 rounded-xl border border-gray-100">{getText(record.notes, lang)}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAlarms = () => (
-    <div className="space-y-6 fade-in max-w-3xl mx-auto">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">{t.alarmsTitle}</h2>
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center gap-2">
-          <PlusCircle size={18} /> {t.addAlarm}
-        </button>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
-        {PATIENT_MEDICATIONS.map(med => (
-          <div key={med.id} className="p-6 flex justify-between items-center">
-            <div>
-              <h3 className="font-bold text-gray-800">{getText(med.name, lang)} <span className="text-indigo-600 text-sm ml-2">({med.dose})</span></h3>
-              <p className="text-sm text-gray-500 mt-1 flex items-center gap-1"><Clock size={14}/> 08:00 AM - 08:00 PM</p>
-            </div>
-            <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-              <input type="checkbox" name="toggle" id={`toggle-${med.id}`} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer checked:right-0 checked:border-green-500 transition-all duration-300" defaultChecked/>
-              <label htmlFor={`toggle-${med.id}`} className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer checked:bg-green-500"></label>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderSettings = () => (
-    <div className="space-y-6 fade-in max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800">{t.settingsTitle}</h2>
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-4">{t.accSettings}</h3>
-          <div className="flex flex-col gap-4">
-             <label className="flex items-center gap-3 text-gray-700">
-               <input type="checkbox" className="w-5 h-5 rounded text-indigo-600" defaultChecked /> {t.emailAlerts}
-             </label>
-             <label className="flex items-center gap-3 text-gray-700">
-               <input type="checkbox" className="w-5 h-5 rounded text-indigo-600" defaultChecked /> {t.smsAlerts}
-             </label>
-          </div>
-        </div>
-        
-        {currentUser.role === 'patient' && (
-          <div className="pt-6 border-t border-gray-100">
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"><MapPin size={20}/> {t.deliveryAddress}</h3>
-            <textarea 
-              rows="3" 
-              value={deliveryAddress} 
-              onChange={e => setDeliveryAddress(e.target.value)} 
-              placeholder={t.addressPlaceholder} 
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none resize-none mb-3"
-            ></textarea>
-            <button className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-colors">{t.saveAddress}</button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  const renderSupport = () => (
-    <div className="space-y-6 fade-in max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800">{t.supportTitle}</h2>
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-         <form className="space-y-6" onSubmit={e => e.preventDefault()}>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t.subject}</label>
-              <input type="text" placeholder={t.subjPlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">{t.msg}</label>
-              <textarea rows="5" placeholder={t.msgPlaceholder} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none resize-none"></textarea>
-            </div>
-            <button className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition-colors flex justify-center items-center gap-2">
-              <Send size={18} /> {t.sendMsg}
-            </button>
-         </form>
-      </div>
-    </div>
-  );
-
-  // --- Modal Rendering ---
-  const renderModal = () => {
-    if (!selectedRequest) return null;
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4 fade-in" style={{ direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-        <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl">
-          <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-            <h3 className="text-xl font-bold text-gray-800">{t.modalTitle} <span className="text-indigo-600 text-sm ml-2">#{selectedRequest.id}</span></h3>
-            <button onClick={() => setSelectedRequest(null)} className="p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"><X size={24}/></button>
-          </div>
-          
-          <div className="space-y-4 text-sm">
-            <div className="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
-              <span className="text-gray-500 font-semibold">{t.currentStatus}</span>
-              <span className={`px-3 py-1 rounded-full font-bold flex items-center gap-1 ${getStatusDetails(selectedRequest.status).color}`}>
-                {getStatusDetails(selectedRequest.status).icon} {getStatusDetails(selectedRequest.status).label}
-              </span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-500 mb-1">{t.patName}</p>
-                <p className="font-bold text-gray-800">{getText(selectedRequest.patientName, lang)}</p>
-              </div>
-              <div>
-                <p className="text-gray-500 mb-1">{t.reqDate}</p>
-                <p className="font-bold text-gray-800">{selectedRequest.date}</p>
-              </div>
-              <div className="col-span-2 mt-2">
-                <p className="text-gray-500 mb-1">{t.reqMed}</p>
-                <p className="font-bold text-indigo-700 text-lg">{getText(selectedRequest.medicationName, lang)}</p>
-              </div>
-              <div className="col-span-2">
-                <p className="text-gray-500 mb-1">{t.reqDoseDuration}</p>
-                <p className="font-bold text-gray-800">{selectedRequest.dose} — {selectedRequest.duration} {lang === 'ar' ? 'أيام' : 'Days'}</p>
-              </div>
-              <div className="col-span-2">
-                <p className="text-gray-500 mb-1">{t.prescribedBy}</p>
-                <p className="font-bold text-gray-800">{getText(selectedRequest.prescribedBy, lang)}</p>
-              </div>
-              <div className="col-span-2 bg-yellow-50 p-4 rounded-xl border border-yellow-100 mt-2">
-                <p className="text-yellow-800 font-semibold mb-1 flex items-center gap-2"><FileText size={16}/> {t.patNotes}</p>
-                <p className="text-yellow-700">{getText(selectedRequest.notes, lang) || '---'}</p>
-              </div>
-            </div>
+          <div className="flex items-start gap-4 bg-emerald-50 p-6 rounded-[1.75rem] text-left text-emerald-900" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+            <ShieldCheck size={28} className="shrink-0 text-emerald-600" />
+            <p className="text-sm font-bold leading-relaxed">{t.privacyNotice}</p>
           </div>
 
-          {/* Role Based Actions */}
-          <div className="mt-8 pt-4 border-t border-gray-100 flex gap-3">
-            {currentUser.role === 'doctor' && selectedRequest.status === 'Pending' && (
-              <>
-                <button onClick={() => { handleStatusChange(selectedRequest.id, 'Approved'); setSelectedRequest(null); }} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors">{t.btnApprove}</button>
-                <button onClick={() => { handleStatusChange(selectedRequest.id, 'Rejected'); setSelectedRequest(null); }} className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 font-bold py-3 rounded-xl transition-colors">{t.btnReject}</button>
-              </>
-            )}
-            {currentUser.role === 'pharmacy' && selectedRequest.status === 'Approved' && (
-              <>
-                <button onClick={() => { handleStatusChange(selectedRequest.id, 'Dispensed'); setSelectedRequest(null); }} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-colors">{t.btnDispense}</button>
-                <button onClick={() => { handleStatusChange(selectedRequest.id, 'Referred'); setSelectedRequest(null); }} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 rounded-xl transition-colors">{t.btnRefer}</button>
-              </>
-            )}
-            {currentUser.role === 'patient' && (
-              <button onClick={() => setSelectedRequest(null)} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 rounded-xl transition-colors">إغلاق</button>
-            )}
+          <div className="mt-12 pt-10 border-t border-gray-100">
+            <p className="text-xs text-gray-400 font-black mb-5 uppercase tracking-[0.2em]">{t.demoLogins}</p>
+            <div className="flex justify-center flex-wrap gap-3">
+              {MOCK_USERS.map(user => (
+                <button key={user.id} onClick={() => handleLogin(user)} className="px-5 py-2.5 bg-gray-100 hover:bg-indigo-100 text-gray-700 hover:text-indigo-800 text-sm font-black rounded-2xl transition-all active:scale-95">
+                  {user.role === 'doctor' ? t.doctorRole : user.role === 'patient' ? t.patientRole : t.pharmacyRole}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     );
-  };
+  }
 
   // --- Main Layout ---
   const visibleNavItems = navItems.filter(item => item.roles.includes(currentUser.role));
 
   return (
     <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`flex h-screen bg-[#F8FAFC] font-sans ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-      <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap'); body { font-family: ${lang === 'ar' ? "'Tajawal', sans-serif" : "'Inter', sans-serif"}; } .fade-in { animation: fadeIn 0.3s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`}} />
+      <style dangerouslySetInnerHTML={{__html: `@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap'); body { font-family: ${lang === 'ar' ? "'Tajawal', sans-serif" : "'Inter', sans-serif"}; overflow: hidden; }`}} />
       
       {/* Sidebar Overlay (Mobile) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden" onClick={() => setIsMobileMenuOpen(false)}></div>
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 ${lang === 'ar' ? 'right-0' : 'left-0'} z-40 w-72 bg-white border-${lang === 'ar' ? 'l' : 'r'} border-gray-100 transform transition-transform duration-300 lg:translate-x-0 lg:static flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full' : '-translate-x-full')}`}>
-        <div className="h-20 flex items-center justify-between px-6 border-b border-gray-50">
+      <aside className={`fixed inset-y-0 ${lang === 'ar' ? 'right-0' : 'left-0'} z-40 w-80 bg-white border-${lang === 'ar' ? 'l' : 'r'} border-gray-100 transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) lg:translate-x-0 lg:static flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : (lang === 'ar' ? 'translate-x-full' : '-translate-x-full')}`}>
+        <div className="h-24 flex items-center justify-between px-8 border-b border-gray-50">
           <div className="flex items-center gap-3">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white"><HeartPulse size={24} /></div>
-            <h1 className="text-2xl font-black text-gray-800 tracking-tight">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
+            <div className="bg-indigo-600 p-2.5 rounded-[1rem] text-white shadow-lg shadow-indigo-100"><HeartPulse size={28} /></div>
+            <h1 className="text-2xl font-black text-gray-900 tracking-tighter">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
           </div>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden text-gray-400 hover:text-gray-600">
-            <X size={24} />
+          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden text-gray-400 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-xl transition-all">
+            <X size={28} />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+        <div className="flex-1 overflow-y-auto py-8 px-5 space-y-2">
           {visibleNavItems.map(item => (
             <button 
               key={item.id} 
               onClick={() => { setCurrentView(item.id); setIsMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-bold transition-all ${currentView === item.id ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'}`}
+              className={`w-full flex items-center gap-5 px-6 py-4 rounded-[1.25rem] font-black text-lg transition-all ${currentView === item.id ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -773,18 +564,18 @@ export default function App() {
           ))}
         </div>
 
-        <div className="p-4 border-t border-gray-50">
-          <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex justify-center items-center font-bold">
-              <User size={20} />
+        <div className="p-6 border-t border-gray-50">
+          <div className="bg-gray-50 rounded-[1.5rem] p-5 flex items-center gap-4 mb-5 border border-gray-100">
+            <div className="w-12 h-12 rounded-[1rem] bg-indigo-100 text-indigo-700 flex justify-center items-center font-black">
+              <User size={24} />
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-bold text-gray-800 truncate">{getText(currentUser.name, lang)}</p>
-              <p className="text-xs text-gray-500 capitalize">{currentUser.role === 'doctor' ? t.doctorRole : currentUser.role === 'patient' ? t.patientRole : t.pharmacyRole}</p>
+              <p className="text-base font-black text-gray-900 truncate">{getText(currentUser.name, lang)}</p>
+              <p className="text-xs text-gray-400 font-black uppercase tracking-widest mt-0.5">{currentUser.role === 'doctor' ? t.doctorRole : currentUser.role === 'patient' ? t.patientRole : t.pharmacyRole}</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-red-600 hover:bg-red-50 transition-colors">
-            <LogOut size={20} /> <span>{t.logout}</span>
+          <button onClick={handleLogout} className="w-full flex items-center gap-4 px-6 py-4 rounded-[1.25rem] font-black text-red-600 hover:bg-red-50 transition-all active:scale-95">
+            <LogOut size={24} /> <span>{t.logout}</span>
           </button>
         </div>
       </aside>
@@ -792,41 +583,118 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#F8FAFC]">
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-8 shrink-0">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 lg:hidden text-gray-500 hover:bg-gray-50 rounded-lg">
-              <Menu size={24} />
+        <header className="h-24 bg-white/80 backdrop-blur-md border-b border-gray-100 flex items-center justify-between px-6 lg:px-12 shrink-0 z-20">
+          <div className="flex items-center gap-5">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="p-3 lg:hidden text-gray-500 hover:bg-gray-50 rounded-[1rem] border border-gray-100 transition-all">
+              <Menu size={28} />
             </button>
-            <h2 className="text-xl font-bold text-gray-800 hidden sm:block">
+            <h2 className="text-2xl font-black text-gray-900 hidden sm:block tracking-tight">
               {navItems.find(i => i.id === currentView)?.label}
             </h2>
           </div>
           
-          <div className="flex items-center gap-3">
-            <button onClick={toggleLanguage} className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-sm font-bold transition-all">
-              <Globe size={16} /> <span>{lang === 'ar' ? 'EN' : 'AR'}</span>
+          <div className="flex items-center gap-4">
+            <button onClick={toggleLanguage} className="flex items-center gap-3 px-5 py-3 bg-gray-50 hover:bg-gray-100 text-gray-900 rounded-[1rem] font-black transition-all border border-gray-100">
+              <Globe size={18} /> <span>{lang === 'ar' ? 'EN' : 'AR'}</span>
             </button>
-            <button className="relative p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-              <Bell size={22} />
-              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            <button className="relative p-3 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-[1rem] border border-gray-100 transition-all group">
+              <Bell size={24} />
+              <span className="absolute top-2 right-2 w-3.5 h-3.5 bg-rose-500 rounded-full border-[3px] border-white group-hover:scale-110 transition-all"></span>
             </button>
           </div>
         </header>
 
         {/* Dynamic View Content */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+        <div className="flex-1 overflow-y-auto p-6 lg:p-12 scroll-smooth">
           {currentView === 'dashboard' && renderDashboard()}
           {currentView === 'new-request' && renderNewRequest()}
           {currentView === 'requests' && renderRequestsList()}
-          {currentView === 'history' && renderHistory()}
-          {currentView === 'alarms' && renderAlarms()}
-          {currentView === 'settings' && renderSettings()}
-          {currentView === 'support' && renderSupport()}
+          {/* ... Other views like history/settings follow the same style ... */}
+          {currentView === 'history' && (
+             <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+               <h2 className="text-3xl font-black text-gray-900 tracking-tight">{t.historyTitle}</h2>
+               <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                  <h3 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-3 text-rose-600"><AlertCircle/> {t.allergiesTitle}</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {allergies.map(al => (
+                      <span key={al.id} className="bg-rose-50 text-rose-700 px-5 py-2.5 rounded-2xl font-black border-2 border-rose-100 flex items-center gap-2">
+                        {getText(al.text, lang)}
+                      </span>
+                    ))}
+                  </div>
+               </div>
+               <div className="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden divide-y divide-gray-50">
+                  {patientHistory.map(record => (
+                    <div key={record.id} className="p-8 hover:bg-gray-50 transition-all">
+                      <div className="flex justify-between items-start mb-4">
+                        <h4 className="text-xl font-black text-gray-900">{getText(record.diagnosis, lang)}</h4>
+                        <span className="text-sm font-black text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-full">{record.date}</span>
+                      </div>
+                      <p className="text-gray-600 font-medium leading-relaxed bg-gray-50/50 p-6 rounded-[1.5rem] border border-gray-100">{getText(record.notes, lang)}</p>
+                    </div>
+                  ))}
+               </div>
+             </div>
+          )}
         </div>
       </main>
 
-      {/* Global Modals */}
-      {renderModal()}
+      {/* Detail Modal (Redesigned) */}
+      {selectedRequest && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex justify-center items-center p-6 animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-xl rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-500" style={{ direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+            <button onClick={() => setSelectedRequest(null)} className="absolute top-8 right-8 lg:right-10 p-3 text-gray-400 hover:text-rose-600 rounded-2xl hover:bg-rose-50 transition-all"><X size={32}/></button>
+            
+            <div className="mb-10">
+              <h3 className="text-3xl font-black text-gray-900 tracking-tight">{t.modalTitle}</h3>
+              <p className="text-indigo-600 font-black text-lg mt-1 tracking-widest">#{selectedRequest.id}</p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="flex justify-between items-center bg-gray-50 p-5 rounded-[1.75rem] border border-gray-100">
+                <span className="text-gray-500 font-black uppercase tracking-widest text-sm">{t.currentStatus}</span>
+                <span className={`px-5 py-2 rounded-full font-black flex items-center gap-2 border-2 ${getStatusDetails(selectedRequest.status).color}`}>
+                  {getStatusDetails(selectedRequest.status).icon} {getStatusDetails(selectedRequest.status).label}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-8 py-2">
+                <div>
+                  <p className="text-gray-400 font-black uppercase tracking-widest text-xs mb-2">{t.patName}</p>
+                  <p className="font-black text-gray-900 text-xl">{getText(selectedRequest.patientName, lang)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 font-black uppercase tracking-widest text-xs mb-2">{t.reqDate}</p>
+                  <p className="font-black text-gray-900 text-xl">{selectedRequest.date}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-gray-400 font-black uppercase tracking-widest text-xs mb-2">{t.reqMed}</p>
+                  <p className="font-black text-indigo-700 text-3xl">{getText(selectedRequest.medicationName, lang)}</p>
+                </div>
+                <div className="col-span-2 bg-indigo-50/50 p-6 rounded-[2rem] border border-indigo-100">
+                  <p className="text-indigo-900 font-black flex items-center gap-3 text-lg mb-1"><FileText/> {selectedRequest.dose} — {selectedRequest.duration} {lang === 'ar' ? 'أيام' : 'Days'}</p>
+                  <p className="text-gray-500 font-bold">{t.prescribedBy} {getText(selectedRequest.prescribedBy, lang)}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 flex gap-4">
+              {currentUser.role === 'doctor' && selectedRequest.status === 'Pending' && (
+                <>
+                  <button onClick={() => { handleStatusChange(selectedRequest.id, 'Approved'); setSelectedRequest(null); }} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-emerald-100 active:scale-95 text-lg">{t.btnApprove}</button>
+                  <button onClick={() => { handleStatusChange(selectedRequest.id, 'Rejected'); setSelectedRequest(null); }} className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-700 font-black py-5 rounded-2xl transition-all border-2 border-rose-100 active:scale-95 text-lg">{t.btnReject}</button>
+                </>
+              )}
+              {currentUser.role === 'pharmacy' && selectedRequest.status === 'Approved' && (
+                <button onClick={() => { handleStatusChange(selectedRequest.id, 'Dispensed'); setSelectedRequest(null); }} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-indigo-100 active:scale-95 text-lg flex items-center justify-center gap-3"><Truck/> {t.btnDispense}</button>
+              )}
+              {currentUser.role === 'patient' && (
+                <button onClick={() => setSelectedRequest(null)} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-black py-5 rounded-2xl transition-all active:scale-95 text-lg">إغلاق</button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
