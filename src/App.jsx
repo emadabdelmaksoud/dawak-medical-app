@@ -36,7 +36,7 @@ const callGeminiAPI = async (prompt) => {
   return "";
 };
 
-// ---------------- Translations (preserved + extended) ----------------
+// ---------------- Translations ----------------
 const TRANSLATIONS = {
   ar: {
     appTitle: "دواء", appTitleHighlight: "ك",
@@ -86,28 +86,24 @@ const TRANSLATIONS = {
     btnApprove: "موافقة", btnReject: "رفض", btnReview: "يحتاج مراجعة", btnMsg: "إرسال رسالة",
     btnDispense: "صرف وتوصيل الدواء", btnRefer: "تحويل لصيدلية أخرى",
     help: "مساعدة", hotline: "الخط الساخن",
-    // Profile fields
     mrn: "رقم الملف الطبي", phone: "رقم الهاتف", dob: "تاريخ الميلاد",
     gender: "النوع", male: "ذكر", female: "أنثى", weight: "الوزن (كغ)", height: "الطول (سم)",
     edit: "تعديل", save: "حفظ", cancel: "إلغاء",
     requestCorrection: "طلب تصحيح",
     correctionFor: "حقل التصحيح", correctionReason: "السبب / القيمة الصحيحة",
     submitCorrection: "إرسال طلب التصحيح",
-    // Admin
     createProfile: "إنشاء حساب جديد", profileType: "نوع الحساب",
     fullName: "الاسم الكامل", regNumber: "رقم التسجيل", username: "اسم المستخدم",
     branch: "الفرع", specialty: "التخصص",
     autoMrnNote: "سيتم إنشاء رقم الملف الطبي تلقائياً",
     correctionRequests: "طلبات التصحيح",
     supportTickets: "تذاكر الدعم",
-    // Doctor add medication form
     diagnosis: "التشخيص",
     medType: "نوع الدواء", acute: "حاد (Acute)", chronic: "مزمن (Chronic)",
     chronicMonths: "المدة (أشهر)",
     mealTiming: "التوقيت مع الطعام",
     beforeMeal: "قبل الأكل", afterMeal: "بعد الأكل", withMeal: "مع الأكل",
     medSearchHint: "اكتب لاكتشاف الأدوية تلقائياً",
-    // Login extras
     loginAsPatient: "دخول المريض", loginAsDoctor: "دخول الطبيب",
     loginAsPharmacy: "دخول الصيدلية", loginAsAdmin: "دخول المدير",
     mrnOrDob: "رقم الملف الطبي أو تاريخ الميلاد",
@@ -115,20 +111,17 @@ const TRANSLATIONS = {
     setPassword: "تعيين كلمة المرور",
     confirmPassword: "تأكيد كلمة المرور",
     signupHint: "التسجيل لتعيين كلمة المرور فقط بنفس بيانات الاعتماد",
-    // Notifications
     noNotifications: "لا توجد إشعارات",
     markAllRead: "تمييز الكل كمقروء",
     correctionSent: "تم إرسال طلب التصحيح للمدير",
     profileCreated: "تم إنشاء الحساب بنجاح",
     alarmCreatedAuto: "تم إنشاء منبه تلقائي للدواء",
-    // Misc
     saved: "تم الحفظ",
     deactivate: "تعطيل", activate: "تفعيل", delete: "حذف", deactivated: "معطل",
     resetPassword: "إعادة تعيين كلمة المرور", newPassword: "كلمة المرور الجديدة", passwordResetDone: "تم إعادة تعيين كلمة المرور",
     auditLog: "سجل النشاط", auditEmpty: "لا يوجد نشاط",
     actCreated: "أنشأ حساب", actEdited: "عدّل بيانات", actDeactivated: "عطّل حساب",
     actActivated: "فعّل حساب", actDeleted: "حذف حساب", actPasswordReset: "أعاد تعيين كلمة مرور",
-    // AI Integrations
     aiExplainTitle: "شرح مبسط للدواء بالذكاء الاصطناعي",
     aiExplainBtn: "✨ اشرح لي هذا الدواء",
     aiSuggestTitle: "اقتراحات علاجية (الذكاء الاصطناعي)",
@@ -221,7 +214,6 @@ const TRANSLATIONS = {
     actCreated: "created account", actEdited: "edited",
     actDeactivated: "deactivated", actActivated: "activated",
     actDeleted: "deleted account", actPasswordReset: "reset password for",
-    // AI Integrations
     aiExplainTitle: "AI Medication Explanation",
     aiExplainBtn: "✨ Explain this medication",
     aiSuggestTitle: "AI Treatment Suggestions",
@@ -589,7 +581,6 @@ export default function App() {
   const myNotifications = notifications.filter(n => !currentUser || n.userId === currentUser.id || (currentUser.role === 'admin'));
   const unreadCount = myNotifications.filter(n => !n.read).length;
 
-  // ---------------- Auth Screen (preserved layout) ----------------
   if (!isAuthenticated) {
     const credentialFields = () => {
       if (authRole === 'patient') {
@@ -614,7 +605,6 @@ export default function App() {
           </div>
         );
       }
-      // pharmacy / admin
       return (
         <div>
           <div className="relative">
@@ -650,7 +640,6 @@ export default function App() {
           <h2 className="text-3xl font-black text-gray-800 mb-2">{t.loginTitle}</h2>
           <p className="text-gray-500 mb-6">{t.loginSubtitle}</p>
 
-          {/* Role tabs */}
           <div className="grid grid-cols-4 bg-gray-100 p-1 rounded-xl mb-4 text-xs">
             {['patient', 'doctor', 'pharmacy', 'admin'].map(r => (
               <button key={r} onClick={() => setAuthRole(r)}
