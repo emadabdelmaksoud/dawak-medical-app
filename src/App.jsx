@@ -90,7 +90,7 @@ const TRANSLATIONS = {
     gender: "النوع", male: "ذكر", female: "أنثى", weight: "الوزن (كغ)", height: "الطول (سم)",
     edit: "تعديل", save: "حفظ", cancel: "إلغاء",
     requestCorrection: "طلب تصحيح",
-    correctionFor: "حقل التصحيح", correctionReason: "السبب / القيمة الصحيحة",
+    correctionFor: "حقل التصحيح", correctionReason: "السبب / القيمة الصح��حة",
     submitCorrection: "إرسال طلب التصحيح",
     createProfile: "إنشاء حساب جديد", profileType: "نوع الحساب",
     fullName: "الاسم الكامل", regNumber: "رقم التسجيل", username: "اسم المستخدم",
@@ -617,30 +617,30 @@ export default function App() {
     };
 
     return (
-      <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center p-4 ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-        <div className="absolute top-6 right-6 left-6 flex justify-between">
+      <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className={`min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center p-4 pt-20 sm:pt-24 ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 left-4 sm:left-6 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200"><HeartPulse size={24} /></div>
-            <h1 className="text-2xl font-black text-gray-800 tracking-tight">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
+            <div className="bg-indigo-600 p-1.5 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-indigo-200"><HeartPulse size={20} className="sm:w-6 sm:h-6" /></div>
+            <h1 className="text-lg sm:text-2xl font-black text-gray-800 tracking-tight">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></h1>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowHelp(true)} className="flex items-center gap-2 px-3 py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-700 rounded-xl font-bold transition-all" title={t.help}>
-              <HelpCircle size={18} />
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button onClick={() => setShowHelp(true)} className="flex items-center gap-2 p-2 sm:px-3 sm:py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-700 rounded-lg sm:rounded-xl font-bold transition-all" title={t.help}>
+              <HelpCircle size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
-            <button onClick={() => setShowHotline(true)} className="flex items-center gap-2 px-3 py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-red-600 rounded-xl font-bold transition-all" title={t.hotline}>
-              <Phone size={18} />
+            <button onClick={() => setShowHotline(true)} className="flex items-center gap-2 p-2 sm:px-3 sm:py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-red-600 rounded-lg sm:rounded-xl font-bold transition-all" title={t.hotline}>
+              <Phone size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
-            <button onClick={toggleLanguage} className="flex items-center gap-2 px-4 py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-700 rounded-xl font-bold transition-all">
-              <Globe size={18} /> <span className="pt-0.5">{lang === 'ar' ? 'English' : 'عربي'}</span>
+            <button onClick={toggleLanguage} className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white shadow-sm hover:bg-gray-50 border border-gray-100 text-gray-700 rounded-lg sm:rounded-xl font-bold transition-all text-xs sm:text-base">
+              <Globe size={16} className="sm:w-[18px] sm:h-[18px]" /> <span className="pt-0.5 hidden xs:inline">{lang === 'ar' ? 'EN' : 'ع'}</span><span className="pt-0.5 hidden sm:inline">{lang === 'ar' ? 'English' : 'عربي'}</span>
             </button>
           </div>
         </div>
 
-        <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-md text-center border border-gray-100 fade-in">
-          <h2 className="text-3xl font-black text-gray-800 mb-2">{t.loginTitle}</h2>
-          <p className="text-gray-500 mb-6">{t.loginSubtitle}</p>
+        <div className="bg-white p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-md text-center border border-gray-100 fade-in">
+          <h2 className="text-xl sm:text-3xl font-black text-gray-800 mb-2">{t.loginTitle}</h2>
+          <p className="text-gray-500 mb-4 sm:mb-6 text-sm sm:text-base">{t.loginSubtitle}</p>
 
-          <div className="grid grid-cols-4 bg-gray-100 p-1 rounded-xl mb-4 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 bg-gray-100 p-1 rounded-xl mb-4 text-xs gap-1">
             {['patient', 'doctor', 'pharmacy', 'admin'].map(r => (
               <button key={r} onClick={() => setAuthRole(r)}
                 className={`py-2 rounded-lg font-bold transition-colors ${authRole === r ? 'bg-white shadow-sm text-indigo-700' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -702,9 +702,9 @@ export default function App() {
             <p className="text-xs font-medium leading-relaxed">{t.privacyNotice}</p>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-100">
+          <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-100">
             <p className="text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">{t.demoLogins}</p>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2">
               {['patient', 'doctor', 'pharmacy', 'admin'].map(role => {
                 const user = SEED_USERS.find(u => u.role === role);
                 if (!user) return null;
@@ -749,28 +749,28 @@ export default function App() {
       const openCorrections = corrections.filter(c => c.status === 'open').length;
       const openTickets = tickets.filter(tk => tk.status === 'open').length;
       return (
-        <div className="space-y-6 fade-in">
-          <h2 className="text-2xl font-bold text-gray-800">{t.welcome} {getText(currentUser.name, lang)}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.patientRole}</p><p className="text-3xl font-bold text-gray-800">{patientCount}</p></div>
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><User size={28} /></div>
+        <div className="space-y-4 sm:space-y-6 fade-in">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{t.welcome} {getText(currentUser.name, lang)}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.patientRole}</p><p className="text-xl sm:text-3xl font-bold text-gray-800">{patientCount}</p></div>
+              <div className="p-2 sm:p-4 bg-indigo-50 text-indigo-600 rounded-lg sm:rounded-xl"><User size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.doctorRole}</p><p className="text-3xl font-bold text-gray-800">{doctorCount}</p></div>
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><Stethoscope size={28} /></div>
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.doctorRole}</p><p className="text-xl sm:text-3xl font-bold text-gray-800">{doctorCount}</p></div>
+              <div className="p-2 sm:p-4 bg-indigo-50 text-indigo-600 rounded-lg sm:rounded-xl"><Stethoscope size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.pharmacyRole}</p><p className="text-3xl font-bold text-gray-800">{pharmacyCount}</p></div>
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><Briefcase size={28} /></div>
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.pharmacyRole}</p><p className="text-xl sm:text-3xl font-bold text-gray-800">{pharmacyCount}</p></div>
+              <div className="p-2 sm:p-4 bg-indigo-50 text-indigo-600 rounded-lg sm:rounded-xl"><Briefcase size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.correctionRequests}</p><p className="text-3xl font-bold text-amber-600">{openCorrections}</p></div>
-              <div className="p-4 bg-amber-50 text-amber-600 rounded-xl"><AlertCircle size={28} /></div>
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.correctionRequests}</p><p className="text-xl sm:text-3xl font-bold text-amber-600">{openCorrections}</p></div>
+              <div className="p-2 sm:p-4 bg-amber-50 text-amber-600 rounded-lg sm:rounded-xl"><AlertCircle size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.supportTickets}</p><p className="text-3xl font-bold text-indigo-600">{openTickets}</p></div>
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><MessageSquare size={28} /></div>
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between col-span-2 md:col-span-1">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.supportTickets}</p><p className="text-xl sm:text-3xl font-bold text-indigo-600">{openTickets}</p></div>
+              <div className="p-2 sm:p-4 bg-indigo-50 text-indigo-600 rounded-lg sm:rounded-xl"><MessageSquare size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
           </div>
         </div>
@@ -781,44 +781,44 @@ export default function App() {
     const actionCount = filteredRequests.filter(r => r.status === 'Approved').length;
 
     return (
-      <div className="space-y-6 fade-in">
-        <h2 className="text-2xl font-bold text-gray-800">{t.welcome} {getText(currentUser.name, lang)}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-            <div><p className="text-sm text-gray-500 mb-1">{t.totalReqs}</p><p className="text-3xl font-bold text-gray-800">{filteredRequests.length}</p></div>
-            <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl"><FileText size={28} /></div>
+      <div className="space-y-4 sm:space-y-6 fade-in">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{t.welcome} {getText(currentUser.name, lang)}</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+          <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+            <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.totalReqs}</p><p className="text-xl sm:text-3xl font-bold text-gray-800">{filteredRequests.length}</p></div>
+            <div className="p-2 sm:p-4 bg-indigo-50 text-indigo-600 rounded-lg sm:rounded-xl"><FileText size={20} className="sm:w-7 sm:h-7" /></div>
           </div>
           {currentUser.role !== 'pharmacy' && (
-            <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-              <div><p className="text-sm text-gray-500 mb-1">{t.pending}</p><p className="text-3xl font-bold text-yellow-600">{pendingCount}</p></div>
-              <div className="p-4 bg-yellow-50 text-yellow-600 rounded-xl"><Clock size={28} /></div>
+            <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+              <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.pending}</p><p className="text-xl sm:text-3xl font-bold text-yellow-600">{pendingCount}</p></div>
+              <div className="p-2 sm:p-4 bg-yellow-50 text-yellow-600 rounded-lg sm:rounded-xl"><Clock size={20} className="sm:w-7 sm:h-7" /></div>
             </div>
           )}
-          <div className="surface bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-            <div><p className="text-sm text-gray-500 mb-1">{t.approved}</p><p className="text-3xl font-bold text-green-600">{actionCount}</p></div>
-            <div className="p-4 bg-green-50 text-green-600 rounded-xl"><CheckCircle size={28} /></div>
+          <div className="surface bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between col-span-2 sm:col-span-1">
+            <div><p className="text-xs sm:text-sm text-gray-500 mb-1">{t.approved}</p><p className="text-xl sm:text-3xl font-bold text-green-600">{actionCount}</p></div>
+            <div className="p-2 sm:p-4 bg-green-50 text-green-600 rounded-lg sm:rounded-xl"><CheckCircle size={20} className="sm:w-7 sm:h-7" /></div>
           </div>
         </div>
 
-        <div className="surface bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-50 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-800">{t.latestReqs}</h3>
-            <button onClick={() => setCurrentView('requests')} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{t.viewAll}</button>
+        <div className="surface bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-4 sm:p-6 border-b border-gray-50 flex justify-between items-center">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800">{t.latestReqs}</h3>
+            <button onClick={() => setCurrentView('requests')} className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-800 font-medium">{t.viewAll}</button>
           </div>
           <div className="divide-y divide-gray-50">
             {filteredRequests.slice(0, 4).map(req => (
-              <div key={req.id} className="p-4 hover:bg-gray-50 flex items-center justify-between transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-full ${getStatusDetails(req.status).color}`}>{getStatusDetails(req.status).icon}</div>
-                  <div>
-                    <p className="font-semibold text-gray-800">{getText(req.medicationName, lang)} <span className="text-gray-400 text-sm ml-1">({req.dose})</span></p>
-                    <p className="text-xs text-gray-500">{currentUser.role !== 'patient' ? getText(req.patientName, lang) : req.id} • {req.date}</p>
+              <div key={req.id} className="p-3 sm:p-4 hover:bg-gray-50 flex items-center justify-between transition-colors gap-2">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <div className={`p-1.5 sm:p-2 rounded-full shrink-0 ${getStatusDetails(req.status).color}`}>{getStatusDetails(req.status).icon}</div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{getText(req.medicationName, lang)} <span className="text-gray-400 text-xs sm:text-sm ml-1">({req.dose})</span></p>
+                    <p className="text-xs text-gray-500 truncate">{currentUser.role !== 'patient' ? getText(req.patientName, lang) : req.id} • {req.date}</p>
                   </div>
                 </div>
-                <button onClick={() => setSelectedRequest(req)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50"><Eye size={20} /></button>
+                <button onClick={() => setSelectedRequest(req)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 shrink-0"><Eye size={18} /></button>
               </div>
             ))}
-            {filteredRequests.length === 0 && <div className="p-6 text-center text-gray-400">{t.noReqs}</div>}
+            {filteredRequests.length === 0 && <div className="p-4 sm:p-6 text-center text-gray-400 text-sm">{t.noReqs}</div>}
           </div>
         </div>
       </div>
@@ -961,24 +961,24 @@ export default function App() {
   );
 
   const renderRequestsList = () => (
-    <div className="space-y-6 fade-in">
-      <div className="flex justify-between gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">{t.reqListTitle}</h2>
+    <div className="space-y-4 sm:space-y-6 fade-in">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{t.reqListTitle}</h2>
         {['patient', 'doctor'].includes(currentUser.role) && (
-          <button onClick={() => setCurrentView('new-request')} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center gap-2">
+          <button onClick={() => setCurrentView('new-request')} className="bg-indigo-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center justify-center gap-2 w-full sm:w-auto">
             <PlusCircle size={18} /> {currentUser.role === 'doctor' ? t.addMedication : t.newRequest}
           </button>
         )}
       </div>
 
-      <div className="surface bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4">
+      <div className="surface bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-3 sm:gap-4">
         <div className="relative flex-1">
-          <Search className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-3 text-gray-400`} size={20} />
-          <input type="text" placeholder={t.searchPlaceholder} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`} />
+          <Search className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-2.5 sm:top-3 text-gray-400`} size={18} />
+          <input type="text" placeholder={t.searchPlaceholder} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`w-full py-2 sm:py-2.5 text-sm sm:text-base rounded-lg sm:rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`} />
         </div>
-        <div className="relative md:w-64">
-          <Filter className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-3 text-gray-400`} size={20} />
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={`w-full py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`}>
+        <div className="relative">
+          <Filter className={`absolute ${lang === 'ar' ? 'right-3' : 'left-3'} top-2.5 sm:top-3 text-gray-400`} size={18} />
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className={`w-full py-2 sm:py-2.5 text-sm sm:text-base rounded-lg sm:rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none ${lang === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'}`}>
             <option value="All">{t.allStatuses}</option>
             <option value="Pending">{t.pending}</option>
             <option value="Approved">{t.approved}</option>
@@ -988,17 +988,17 @@ export default function App() {
         </div>
       </div>
 
-      <div className="surface bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="surface bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className={`w-full whitespace-nowrap ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-            <thead className="bg-gray-50 text-gray-500 text-sm">
+          <table className={`w-full whitespace-nowrap text-sm sm:text-base ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+            <thead className="bg-gray-50 text-gray-500 text-xs sm:text-sm">
               <tr>
-                <th className="px-6 py-4 font-semibold">{t.colId}</th>
-                {currentUser.role !== 'patient' && <th className="px-6 py-4 font-semibold">{t.colPatient}</th>}
-                <th className="px-6 py-4 font-semibold">{t.colMed}</th>
-                <th className="px-6 py-4 font-semibold">{t.colDate}</th>
-                <th className="px-6 py-4 font-semibold">{t.colStatus}</th>
-                <th className="px-6 py-4 font-semibold text-center">{t.colActions}</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold">{t.colId}</th>
+                {currentUser.role !== 'patient' && <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold hidden sm:table-cell">{t.colPatient}</th>}
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold">{t.colMed}</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold hidden md:table-cell">{t.colDate}</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold">{t.colStatus}</th>
+                <th className="px-3 sm:px-6 py-3 sm:py-4 font-semibold text-center">{t.colActions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -1006,13 +1006,13 @@ export default function App() {
                 const statusInfo = getStatusDetails(req.status);
                 return (
                   <tr key={req.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-800">{req.id}</td>
-                    {currentUser.role !== 'patient' && <td className="px-6 py-4 text-gray-600">{getText(req.patientName, lang)}</td>}
-                    <td className="px-6 py-4 font-medium text-indigo-600">{getText(req.medicationName, lang)}</td>
-                    <td className="px-6 py-4 text-gray-500">{req.date}</td>
-                    <td className="px-6 py-4"><span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold border ${statusInfo.color}`}>{statusInfo.icon} {statusInfo.label}</span></td>
-                    <td className="px-6 py-4 text-center">
-                      <button onClick={() => { setSelectedRequest(req); setAiExplanation(null); setIsExplaining(false); }} className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">{t.viewDetails}</button>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-gray-800 text-xs sm:text-sm">{req.id}</td>
+                    {currentUser.role !== 'patient' && <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-600 hidden sm:table-cell">{getText(req.patientName, lang)}</td>}
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 font-medium text-indigo-600 text-xs sm:text-sm">{getText(req.medicationName, lang)}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-500 hidden md:table-cell">{req.date}</td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4"><span className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold border ${statusInfo.color}`}>{statusInfo.icon} <span className="hidden sm:inline">{statusInfo.label}</span></span></td>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
+                      <button onClick={() => { setSelectedRequest(req); setAiExplanation(null); setIsExplaining(false); }} className="text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors"><span className="hidden sm:inline">{t.viewDetails}</span><Eye size={16} className="sm:hidden" /></button>
                     </td>
                   </tr>
                 );
@@ -1834,14 +1834,14 @@ export default function App() {
     if (!selectedRequest) return null;
     const statusInfo = getStatusDetails(selectedRequest.status);
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm fade-in">
-        <div className={`bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
-            <h3 className="text-xl font-bold text-gray-800">{t.modalTitle} {selectedRequest.id}</h3>
-            <button onClick={() => { setSelectedRequest(null); setAiExplanation(null); setIsExplaining(false); }} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full"><X size={24} /></button>
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-900/50 backdrop-blur-sm fade-in">
+        <div className={`bg-white rounded-t-2xl sm:rounded-3xl shadow-2xl w-full sm:max-w-lg overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh] ${lang === 'ar' ? 'text-right' : 'text-left'}`}>
+          <div className="p-4 sm:p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+            <h3 className="text-base sm:text-xl font-bold text-gray-800">{t.modalTitle} {selectedRequest.id}</h3>
+            <button onClick={() => { setSelectedRequest(null); setAiExplanation(null); setIsExplaining(false); }} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full"><X size={22} /></button>
           </div>
 
-          <div className="p-6 space-y-6 overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
             <div className="flex justify-between items-center">
               <span className="text-gray-500 font-medium">{t.currentStatus}</span>
               <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold border ${statusInfo.color}`}>{statusInfo.icon} {statusInfo.label}</span>
@@ -1856,9 +1856,9 @@ export default function App() {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
-              <div><p className="text-xs text-gray-500 mb-1">{t.patName}</p><p className="font-bold text-gray-800">{getText(selectedRequest.patientName, lang)}</p></div>
-              <div><p className="text-xs text-gray-500 mb-1">{t.reqDate}</p><p className="font-bold text-gray-800">{selectedRequest.date}</p></div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 bg-gray-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-gray-100">
+              <div><p className="text-[10px] sm:text-xs text-gray-500 mb-1">{t.patName}</p><p className="font-bold text-gray-800 text-sm sm:text-base">{getText(selectedRequest.patientName, lang)}</p></div>
+              <div><p className="text-[10px] sm:text-xs text-gray-500 mb-1">{t.reqDate}</p><p className="font-bold text-gray-800 text-sm sm:text-base">{selectedRequest.date}</p></div>
 
               {currentUser?.role === 'pharmacy' && selectedRequest.prescribedBy && (
                 <div className="col-span-2"><p className="text-xs text-indigo-500 font-bold mb-1">{t.prescribedBy}</p><p className="font-bold text-gray-800 flex items-center gap-1"><Stethoscope size={16} className="text-indigo-400" /> {getText(selectedRequest.prescribedBy, lang)}</p></div>
@@ -1911,20 +1911,20 @@ export default function App() {
             )}
           </div>
 
-          <div className="p-6 border-t border-gray-100 bg-gray-50 flex flex-wrap gap-3 shrink-0">
+          <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50 flex flex-wrap gap-2 sm:gap-3 shrink-0">
             {currentUser?.role === 'doctor' && selectedRequest.status === 'Pending' && (
               <>
-                <button onClick={() => handleStatusChange(selectedRequest.id, 'Approved')} className="flex-1 bg-green-600 text-white py-2.5 rounded-xl font-bold flex justify-center items-center gap-2"><CheckCircle size={18} /> {t.btnApprove}</button>
-                <button onClick={() => handleStatusChange(selectedRequest.id, 'Rejected')} className="flex-1 bg-red-600 text-white py-2.5 rounded-xl font-bold flex justify-center items-center gap-2"><XCircle size={18} /> {t.btnReject}</button>
+                <button onClick={() => handleStatusChange(selectedRequest.id, 'Approved')} className="flex-1 bg-green-600 text-white py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold flex justify-center items-center gap-2 text-sm sm:text-base"><CheckCircle size={16} /> {t.btnApprove}</button>
+                <button onClick={() => handleStatusChange(selectedRequest.id, 'Rejected')} className="flex-1 bg-red-600 text-white py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold flex justify-center items-center gap-2 text-sm sm:text-base"><XCircle size={16} /> {t.btnReject}</button>
               </>
             )}
             {currentUser?.role === 'pharmacy' && selectedRequest.status === 'Approved' && (
               <>
-                <button onClick={() => handleStatusChange(selectedRequest.id, 'Dispensed')} className="w-full bg-green-600 text-white py-2.5 rounded-xl font-bold flex justify-center items-center gap-2"><Truck size={18} /> {t.btnDispense}</button>
-                <button onClick={() => handleStatusChange(selectedRequest.id, 'Referred')} className="w-full bg-gray-200 text-gray-700 py-2.5 rounded-xl font-bold flex justify-center items-center gap-2 mt-2"><Activity size={18} /> {t.btnRefer}</button>
+                <button onClick={() => handleStatusChange(selectedRequest.id, 'Dispensed')} className="w-full bg-green-600 text-white py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold flex justify-center items-center gap-2 text-sm sm:text-base"><Truck size={16} /> {t.btnDispense}</button>
+                <button onClick={() => handleStatusChange(selectedRequest.id, 'Referred')} className="w-full bg-gray-200 text-gray-700 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold flex justify-center items-center gap-2 mt-2 text-sm sm:text-base"><Activity size={16} /> {t.btnRefer}</button>
               </>
             )}
-            <button className="w-full bg-gray-200 text-gray-700 py-2.5 rounded-xl font-bold flex justify-center items-center gap-2 mt-2"><MessageSquare size={18} /> {t.btnMsg}</button>
+            <button className="w-full bg-gray-200 text-gray-700 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold flex justify-center items-center gap-2 mt-2 text-sm sm:text-base"><MessageSquare size={16} /> {t.btnMsg}</button>
           </div>
         </div>
       </div>
@@ -1978,24 +1978,28 @@ export default function App() {
       )}
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <header className="surface bg-white h-20 border-b border-gray-200 flex items-center justify-between px-6 shrink-0 shadow-sm z-10">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden p-2 text-gray-500 bg-gray-50 rounded-lg"><Menu size={24} /></button>
+        <header className="surface bg-white h-16 sm:h-20 border-b border-gray-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm z-10">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden p-2 text-gray-500 bg-gray-50 rounded-lg"><Menu size={22} /></button>
+            <div className="md:hidden flex items-center gap-2">
+              <div className="bg-indigo-600 p-1.5 rounded-lg text-white"><HeartPulse size={18} /></div>
+              <span className="font-black text-gray-800">{t.appTitle}<span className="text-indigo-600">{t.appTitleHighlight}</span></span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
-            <button onClick={() => setShowHelp(true)} title={t.help} className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"><HelpCircle size={18} /></button>
-            <button onClick={() => setShowHotline(true)} title={t.hotline} className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors"><Phone size={18} /></button>
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+            <button onClick={() => setShowHelp(true)} title={t.help} className="hidden sm:flex p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"><HelpCircle size={18} /></button>
+            <button onClick={() => setShowHotline(true)} title={t.hotline} className="hidden sm:flex p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors"><Phone size={18} /></button>
             <button onClick={() => setCurrentView('notifications')} title={t.notifications} className="relative p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
               <Bell size={18} />
               {unreadCount > 0 && <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full px-1.5">{unreadCount}</span>}
             </button>
-            <button onClick={toggleLanguage} className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-bold text-sm transition-colors"><Globe size={18} /><span className="pt-0.5">{lang === 'ar' ? 'English' : 'عربي'}</span></button>
-            <div className="flex items-center gap-3 border-l border-gray-200 pl-3 ml-1">
+            <button onClick={toggleLanguage} className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-bold text-xs sm:text-sm transition-colors"><Globe size={16} className="sm:w-[18px] sm:h-[18px]" /><span className="pt-0.5 hidden sm:inline">{lang === 'ar' ? 'English' : 'عربي'}</span></button>
+            <div className="flex items-center gap-2 sm:gap-3 border-l border-gray-200 pl-2 sm:pl-3 ml-1">
               <div className={`hidden md:block ${lang === 'ar' ? 'text-left' : 'text-right'}`}>
                 <p className="text-sm font-bold text-gray-800">{getText(currentUser.name, lang)}</p>
                 <p className="text-xs text-gray-500">{currentUser.role === 'doctor' ? t.doctorRole : currentUser.role === 'patient' ? t.patientRole : currentUser.role === 'pharmacy' ? t.pharmacyRole : t.adminRole}</p>
               </div>
-              <button onClick={() => setCurrentView('profile')} className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold border border-indigo-200 shadow-sm"><User size={20} /></button>
+              <button onClick={() => setCurrentView('profile')} className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold border border-indigo-200 shadow-sm"><User size={18} className="sm:w-5 sm:h-5" /></button>
             </div>
           </div>
         </header>
